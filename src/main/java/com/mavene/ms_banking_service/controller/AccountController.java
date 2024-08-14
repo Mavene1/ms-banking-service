@@ -53,7 +53,23 @@ public class AccountController {
     @GetMapping("/getAllAccounts")
     public ResponseEntity<List<AccountDto>> getAllAccounts() {
         List<AccountDto> accountDtos = accountService.getAllAccounts();
-        System.out.println("Get all accounts.....");
+        System.out.println("Getting all accounts.....");
         return ResponseEntity.ok(accountDtos);
+    }
+
+    //Build update account by id REST API
+    @PutMapping("/updateAccountById/{id}")
+    public ResponseEntity<AccountDto> updateAccountById(@PathVariable Long id, @RequestBody AccountDto updatedAccountDto) {
+        AccountDto accountDto = accountService.updateAccountById(id, updatedAccountDto);
+        System.out.println("Updating account by Id.....");
+        return ResponseEntity.ok(accountDto);
+    }
+
+    //Build delete account by id REST API
+    @DeleteMapping("/deleteAccountById")
+    public ResponseEntity<String> deleteAccountById(@RequestParam Long id) {
+        accountService.deleteAccountById(id);
+        System.out.println("Deleting account by Id.....");
+        return ResponseEntity.ok("Account deleted successfully");
     }
 }

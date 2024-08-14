@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class AccountServiceImpl implements AccountService {
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     //Build create or save a new account
     @Override
@@ -40,11 +40,20 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto updateAccountById(Long id, AccountDto updatedAccountDto) {
-        return null;
+        Account account = accountRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Account not found with id: " + id));
+
+        account.setAccountHolderName(updatedAccountDto.getAccountHolderName());
+        account.setBalance(updatedAccountDto.getBalance());
+        Account updatedAccount = accountRepository.save(account);
+
+        return AccountMapper.toAccountDto(updatedAccount);
     }
 
     @Override
     public void deleteAccountById(Long id) {
-
+        Account account = accountRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Account not found with id: " + id));
+        accountRepository.delete(account);
     }
 }
