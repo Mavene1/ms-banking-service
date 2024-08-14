@@ -3,6 +3,9 @@ package com.mavene.ms_banking_service.mapper;
 import com.mavene.ms_banking_service.dto.AccountDto;
 import com.mavene.ms_banking_service.entity.Account;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class AccountMapper {
     //Build function to map account entity to accountDto;
     public static AccountDto toAccountDto(Account account) {
@@ -20,6 +23,10 @@ public class AccountMapper {
                 accountDto.getAccountHolderName(),
                 accountDto.getBalance()
         );
+    }
+
+    public static List<AccountDto> toAccountDtoList(List<Account> accounts) {
+        return accounts.stream().map(AccountMapper::toAccountDto).collect(Collectors.toList());
     }
 }
 

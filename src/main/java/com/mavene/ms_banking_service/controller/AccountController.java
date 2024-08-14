@@ -3,15 +3,12 @@ package com.mavene.ms_banking_service.controller;
 import com.mavene.ms_banking_service.dto.AccountDto;
 import com.mavene.ms_banking_service.service.AccountService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,7 +22,7 @@ public class AccountController {
     @PostMapping("/createAccount")
     public ResponseEntity<Map<String, Object>> createAccount(@RequestBody AccountDto accountDto) {
         AccountDto createdAccount = accountService.createAccount(accountDto);
-        System.out.println("Creating and saving employee.....");
+        System.out.println("Creating and saving account....");
 
         // Creating the headers object
         Map<String, Object> headers = new HashMap<>();
@@ -42,5 +39,21 @@ public class AccountController {
         response.put("headers", headers);
         response.put("body", body);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    //Build get account by id REST API
+    @GetMapping("/getAccountById/{id}")
+    public ResponseEntity<AccountDto> getAccountById(@PathVariable Long id) {
+        AccountDto accountDto = accountService.getAccountById(id);
+        System.out.println("Get account by Id.....");
+        return ResponseEntity.ok(accountDto);
+    }
+
+    //Build get all accounts REST API
+    @GetMapping("/getAllAccounts")
+    public ResponseEntity<List<AccountDto>> getAllAccounts() {
+        List<AccountDto> accountDtos = accountService.getAllAccounts();
+        System.out.println("Get all accounts.....");
+        return ResponseEntity.ok(accountDtos);
     }
 }
