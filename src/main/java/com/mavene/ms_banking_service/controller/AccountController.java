@@ -3,24 +3,44 @@ package com.mavene.ms_banking_service.controller;
 import com.mavene.ms_banking_service.dto.AccountDto;
 import com.mavene.ms_banking_service.service.AccountService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("api/v1/account")
 @AllArgsConstructor
 public class AccountController {
 
-    private AccountService accountService;
+    private final AccountService accountService;
 
     //Build create or save a new account REST API
     @PostMapping("/createAccount")
-    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
+    public ResponseEntity<Map<String, Object>> createAccount(@RequestBody AccountDto accountDto) {
         AccountDto createdAccount = accountService.createAccount(accountDto);
         System.out.println("Creating and saving employee.....");
-        return new ResponseEntity<>(createdAccount, null, 201);
+
+        // Creating the headers object
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("responseMessage", "Operation Successful");
+        headers.put("responseCode", "200");
+
+        // Creating the body object
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Account created successfully");
+        body.put("account", createdAccount);
+
+        // Creating the final response object with separated headers and body
+        Map<String, Object> response = new HashMap<>();
+        response.put("headers", headers);
+        response.put("body", body);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }
