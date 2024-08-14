@@ -34,7 +34,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountDto getAccountById(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Account not found with id: " + id));;
+                new RuntimeException("Account not found with id: " + id));;
         return AccountMapper.toAccountDto(account);
     }
 
@@ -47,6 +47,31 @@ public class AccountServiceImpl implements AccountService {
         account.setBalance(updatedAccountDto.getBalance());
         Account updatedAccount = accountRepository.save(account);
 
+        return AccountMapper.toAccountDto(updatedAccount);
+    }
+
+    @Override
+    public AccountDto depositAccountById(Long id, Double depositedAmount) {
+        Account account = accountRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Account not found with id: " + id));
+        account.setBalance(account.getBalance() + depositedAmount);
+        Account updatedAccount = accountRepository.save(account);
+        return AccountMapper.toAccountDto(updatedAccount);
+    }
+
+    @Override
+    public AccountDto withdrawAccountById(Long id, Double withdrawnAmount) {
+        Account account = accountRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Account not found with id: " + id));
+        if (account.getBalance() < withdrawnAmount) {
+            return null;
+//            throw new RuntimeException("Insufficient balance");
+        }
+        if (withdrawnAmount < 0) {
+            throw new RuntimeException("Invalid amount");
+        }
+        account.setBalance(account.getBalance() - withdrawnAmount);
+        Account updatedAccount = accountRepository.save(account);
         return AccountMapper.toAccountDto(updatedAccount);
     }
 

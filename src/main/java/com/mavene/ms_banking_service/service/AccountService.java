@@ -17,6 +17,12 @@ public interface AccountService {
     //Build update account by id
     AccountDto updateAccountById(Long id, AccountDto updatedAccountDto);
 
+    //Build deposit account by id
+    AccountDto depositAccountById(Long id, Double depositedAmount);
+
+    //Build withdraw account by id
+    AccountDto withdrawAccountById(Long id, Double withdrawnAmount);
+
     //Build delete account by id
     void deleteAccountById(Long id);
 }
